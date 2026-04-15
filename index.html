@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quizily</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="bg-blur bg1"></div>
+  <div class="bg-blur bg2"></div>
+
+  <div class="container">
+
+    <section id="login-box" class="card login-card">
+      <h1>Quizily</h1>
+      <p class="tagline">Login with your name and email to continue your progress.</p>
+      <input type="text" id="username" placeholder="Enter your name" />
+      <input type="email" id="email" placeholder="Enter your email" />
+      <button id="start-btn">Login</button>
+      <p id="login-msg"></p>
+    </section>
+
+    <section id="dashboard-box" class="card hidden">
+      <div class="dash-head">
+        <div>
+          <h1>Quizily Dashboard</h1>
+          <p>Hello, <span id="user-name">Guest</span></p>
+          <p class="small-text"><span id="user-email"></span></p>
+        </div>
+        <button id="logout-btn">Logout</button>
+      </div>
+
+      <div class="dashboard">
+        <h2>Your Progress</h2>
+
+        <div class="subject-grid">
+          <button class="subject-card" data-subject="biology">
+            <div class="subject-icon">🧬</div>
+            <div class="subject-name">Biology</div>
+            <div class="subject-progress"><span id="bio-progress">0/10</span></div>
+            <div class="mini-track"><div id="bio-bar" class="mini-bar"></div></div>
+          </button>
+
+          <button class="subject-card" data-subject="chemistry">
+            <div class="subject-icon">⚗️</div>
+            <div class="subject-name">Chemistry</div>
+            <div class="subject-progress"><span id="chem-progress">0/10</span></div>
+            <div class="mini-track"><div id="chem-bar" class="mini-bar"></div></div>
+          </button>
+
+          <button class="subject-card" data-subject="physics">
+            <div class="subject-icon">🪐</div>
+            <div class="subject-name">Physics</div>
+            <div class="subject-progress"><span id="phy-progress">0/10</span></div>
+            <div class="mini-track"><div id="phy-bar" class="mini-bar"></div></div>
+          </button>
+
+          <button class="subject-card" data-subject="maths">
+            <div class="subject-icon">➗</div>
+            <div class="subject-name">Maths</div>
+            <div class="subject-progress"><span id="math-progress">0/10</span></div>
+            <div class="mini-track"><div id="math-bar" class="mini-bar"></div></div>
+          </button>
+        </div>
+
+        <p id="user-progress"></p>
+      </div>
+    </section>
+
+    <section id="levels-box" class="card hidden">
+      <div class="dash-head">
+        <div>
+          <h1 id="levels-title">Biology Levels</h1>
+          <p id="levels-subtitle">Choose a level to begin.</p>
+        </div>
+        <button id="back-dashboard-btn">Back</button>
+      </div>
+
+      <div class="level-grid" id="level-grid"></div>
+    </section>
+
+    <section id="quiz-box" class="card hidden">
+      <div class="quiz-top">
+        <p id="counter">Level 1/10 - Q1/10</p>
+        <p id="timer">Time: 60s</p>
+      </div>
+
+      <div class="progress-wrap">
+        <div id="progress-bar"></div>
+      </div>
+
+      <h2 id="question">Question will appear here</h2>
+
+      <div class="options">
+        <button class="option"></button>
+        <button class="option"></button>
+        <button class="option"></button>
+        <button class="option"></button>
+      </div>
+
+      <div class="quiz-actions">
+        <button id="back">Back</button>
+        <button id="next" style="display:none;">Next</button>
+      </div>
+
+      <p id="stars">☆☆☆☆☆☆☆☆☆☆</p>
+    </section>
+
+    <section id="result-box" class="card hidden">
+      <h2 id="welcome">Great job!</h2>
+      <p>Your score: <span id="score">0/0</span></p>
+      <p>Stars earned: <span id="earned-stars">0</span></p>
+      <button onclick="restartQuiz()">Restart</button>
+      <button id="go-dashboard">Go to Dashboard</button>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
