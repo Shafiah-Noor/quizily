@@ -6,119 +6,123 @@
   <title>Quizily</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <div class="bg-blur bg1"></div>
-  <div class="bg-blur bg2"></div>
-
-  <div class="container">
-
-    <section id="login-box" class="card login-card">
+  <div id="login-box">
+    <div class="login-card">
       <h1>Quizily</h1>
-      <p class="tagline">Login with your name and email to continue your progress.</p>
-      <input type="text" id="username" placeholder="Enter your name" />
-      <input type="email" id="email" placeholder="Enter your email" />
-      <button id="start-btn">Login</button>
-      <p id="login-msg"></p>
-    </section>
+      <p class="small-text">Login to continue your subject quizzes.</p>
+      <input id="username" placeholder="Enter name" />
+      <input id="email" placeholder="Enter email" />
+      <button id="start-btn" class="primary-btn">Start</button>
+      <div id="login-msg" class="small-text"></div>
+    </div>
+  </div>
 
-    <section id="dashboard-box" class="card hidden">
-      <div class="dash-head">
+  <div id="dashboard-box" class="hidden">
+    <div class="dashboard-header">
+      <div class="dashboard-top">
         <div>
-          <h1>Quizily Dashboard</h1>
-          <p>Hello, <span id="user-name">Guest</span></p>
-          <p class="small-text"><span id="user-email"></span></p>
+          <h2>Welcome, <span id="user-name"></span></h2>
+          <p id="user-email" class="small-text"></p>
+          <p id="user-progress" class="small-text"></p>
         </div>
-        <button id="logout-btn">Logout</button>
-      </div>
-
-      <div class="dashboard">
-        <h2>Your Progress</h2>
-
-        <div class="subject-grid">
-          <button class="subject-card" data-subject="biology">
-            <div class="subject-icon">🧬</div>
-            <div class="subject-name">Biology</div>
-            <div class="subject-progress"><span id="bio-progress">0/10</span></div>
-            <div class="mini-track"><div id="bio-bar" class="mini-bar"></div></div>
-          </button>
-
-          <button class="subject-card" data-subject="chemistry">
-            <div class="subject-icon">⚗️</div>
-            <div class="subject-name">Chemistry</div>
-            <div class="subject-progress"><span id="chem-progress">0/10</span></div>
-            <div class="mini-track"><div id="chem-bar" class="mini-bar"></div></div>
-          </button>
-
-          <button class="subject-card" data-subject="physics">
-            <div class="subject-icon">🪐</div>
-            <div class="subject-name">Physics</div>
-            <div class="subject-progress"><span id="phy-progress">0/10</span></div>
-            <div class="mini-track"><div id="phy-bar" class="mini-bar"></div></div>
-          </button>
-
-          <button class="subject-card" data-subject="maths">
-            <div class="subject-icon">➗</div>
-            <div class="subject-name">Maths</div>
-            <div class="subject-progress"><span id="math-progress">0/10</span></div>
-            <div class="mini-track"><div id="math-bar" class="mini-bar"></div></div>
-          </button>
+        <div class="btn-row">
+          <button id="logout-btn" class="secondary-btn">Logout</button>
         </div>
-
-        <p id="user-progress"></p>
       </div>
-    </section>
+    </div>
 
-    <section id="levels-box" class="card hidden">
-      <div class="dash-head">
+    <div class="subject-grid">
+      <button class="subject-card biology" data-subject="biology">
+        <div class="subject-name">Biology</div>
+        <div id="bio-progress" class="subject-progress">0/10</div>
+        <div class="mini-track"><div id="bio-bar" class="mini-bar"></div></div>
+      </button>
+
+      <button class="subject-card chemistry" data-subject="chemistry">
+        <div class="subject-name">Chemistry</div>
+        <div id="chem-progress" class="subject-progress">0/10</div>
+        <div class="mini-track"><div id="chem-bar" class="mini-bar"></div></div>
+      </button>
+
+      <button class="subject-card maths" data-subject="maths">
+        <div class="subject-name">Maths</div>
+        <div id="math-progress" class="subject-progress">0/10</div>
+        <div class="mini-track"><div id="math-bar" class="mini-bar"></div></div>
+      </button>
+
+      <button class="subject-card physics" data-subject="physics">
+        <div class="subject-name">Physics</div>
+        <div id="phy-progress" class="subject-progress">0/10</div>
+        <div class="mini-track"><div id="phy-bar" class="mini-bar"></div></div>
+      </button>
+    </div>
+  </div>
+
+  <div id="levels-box" class="hidden">
+    <div class="levels-header">
+      <div class="dashboard-top">
         <div>
-          <h1 id="levels-title">Biology Levels</h1>
-          <p id="levels-subtitle">Choose a level to begin.</p>
+          <h2 id="levels-title">Levels</h2>
+          <p id="levels-subtitle" class="small-text">Choose a level to begin.</p>
         </div>
-        <button id="back-dashboard-btn">Back</button>
+        <div class="btn-row">
+          <button id="back-dashboard-btn" class="secondary-btn">Dashboard</button>
+        </div>
       </div>
 
-      <div class="level-grid" id="level-grid"></div>
-    </section>
+      <div id="subject-theme" class="theme-banner hidden">
+        <span id="theme-icon">✨</span>
+        <span id="theme-name"></span>
+      </div>
+    </div>
 
-    <section id="quiz-box" class="card hidden">
-      <div class="quiz-top">
-        <p id="counter">Level 1/10 - Q1/10</p>
-        <p id="timer">Time: 60s</p>
+    <div id="level-grid"></div>
+  </div>
+
+  <div id="quiz-box" class="hidden">
+    <div class="quiz-card">
+      <div class="quiz-header">
+        <div class="dashboard-top">
+          <div>
+            <div id="counter" class="small-text"></div>
+            <h2 id="question"></h2>
+          </div>
+          <div id="timer" class="small-text"></div>
+        </div>
+        <div class="progress-track"><div id="progress-bar"></div></div>
       </div>
 
-      <div class="progress-wrap">
-        <div id="progress-bar"></div>
-      </div>
-
-      <h2 id="question">Question will appear here</h2>
-
-      <div class="options">
+      <div id="options">
         <button class="option"></button>
         <button class="option"></button>
         <button class="option"></button>
         <button class="option"></button>
       </div>
 
-      <div class="quiz-actions">
-        <button id="back">Back</button>
-        <button id="next" style="display:none;">Next</button>
+      <div class="btn-row">
+        <button id="next" class="primary-btn">Next</button>
+        <button id="back" class="secondary-btn">Back</button>
       </div>
+    </div>
+  </div>
 
-      <p id="stars">☆☆☆☆☆☆☆☆☆☆</p>
-    </section>
-
-    <section id="result-box" class="card hidden">
-      <h2 id="welcome">Great job!</h2>
-      <p>Your score: <span id="score">0/0</span></p>
-      <p>Stars earned: <span id="earned-stars">0</span></p>
-      <button onclick="restartQuiz()">Restart</button>
-      <button id="go-dashboard">Go to Dashboard</button>
-    </section>
-
+  <div id="result-box" class="hidden">
+    <div class="result-card">
+      <h2 id="welcome"></h2>
+      <p>You completed this level successfully.</p>
+      <p>Score: <span id="score"></span></p>
+      <p>Stars earned: <span id="earned-stars"></span></p>
+      <p id="stars"></p>
+      <div class="btn-row" style="justify-content:center;">
+        <button id="go-dashboard" class="primary-btn">Go to Dashboard</button>
+        <button id="restart-btn" class="secondary-btn" onclick="location.reload()">Restart</button>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
