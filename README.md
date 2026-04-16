@@ -13,11 +13,6 @@ Quizily is an interactive quiz application built using HTML, CSS, and JavaScript
 - CSS
 - JavaScript
 
-## 📸 Screenshots
-(Add your screenshots here later)
 
-## 🔗 Live Demo
-Coming soon...
 
-## 👩‍💻 Author
-Shafiah Noor
+
