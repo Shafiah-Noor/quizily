@@ -379,9 +379,12 @@ const loginMsg = document.getElementById("login-msg");
 const logoutBtn = document.getElementById("logout-btn");
 const goDashboardBtn = document.getElementById("go-dashboard");
 const backDashboardBtn = document.getElementById("back-dashboard-btn");
+const backBtn = document.getElementById("back");
+const nextBtn = document.getElementById("next");
 
 const userNameEl = document.getElementById("user-name");
 const userEmailEl = document.getElementById("user-email");
+const userProgressEl = document.getElementById("user-progress");
 const bioProgressEl = document.getElementById("bio-progress");
 const chemProgressEl = document.getElementById("chem-progress");
 const phyProgressEl = document.getElementById("phy-progress");
@@ -390,16 +393,11 @@ const bioBar = document.getElementById("bio-bar");
 const chemBar = document.getElementById("chem-bar");
 const phyBar = document.getElementById("phy-bar");
 const mathBar = document.getElementById("math-bar");
-const userProgressEl = document.getElementById("user-progress");
-
 const levelsTitle = document.getElementById("levels-title");
 const levelsSubtitle = document.getElementById("levels-subtitle");
 const levelGrid = document.getElementById("level-grid");
-
 const questionEl = document.getElementById("question");
 const optionEls = document.querySelectorAll(".option");
-const nextBtn = document.getElementById("next");
-const backBtn = document.getElementById("back");
 const counterEl = document.getElementById("counter");
 const progressBar = document.getElementById("progress-bar");
 const timerEl = document.getElementById("timer");
@@ -407,9 +405,11 @@ const scoreEl = document.getElementById("score");
 const welcomeEl = document.getElementById("welcome");
 const starsEl = document.getElementById("stars");
 const earnedStarsEl = document.getElementById("earned-stars");
+const themeBanner = document.getElementById("subject-theme");
+const themeName = document.getElementById("theme-name");
+const themeIcon = document.getElementById("theme-icon");
 
 const subjectCards = document.querySelectorAll(".subject-card");
-
 let currentUser = "";
 let currentEmail = "";
 let currentSubject = "";
@@ -419,46 +419,19 @@ let currentQuestion = 0;
 let score = 0;
 let timer = null;
 let timeLeft = 0;
-
 const questionsPerLevel = 10;
 const totalLevels = 10;
 
 function showSection(section) {
-  [loginBox, dashboardBox, levelsBox, quizBox, resultBox].forEach(box => {
-    box.classList.add("hidden");
-    box.classList.remove("fade-in");
-  });
+  [loginBox, dashboardBox, levelsBox, quizBox, resultBox].forEach(b => b.classList.add("hidden"));
   section.classList.remove("hidden");
-  setTimeout(() => section.classList.add("fade-in"), 10);
 }
 
-function normalizeText(text) {
-  return text.trim().replace(/\s+/g, " ");
-}
-
-function normalizeEmail(email) {
-  return email.trim().toLowerCase();
-}
-
-function getUsersData() {
-  return JSON.parse(localStorage.getItem("quizily_users") || "{}");
-}
-
-function saveUsersData(data) {
-  localStorage.setItem("quizily_users", JSON.stringify(data));
-}
-
-function defaultSubjectData() {
-  return {
-    completedLevels: 0,
-    unlockedLevel: 1,
-    stars: 0,
-    bestScore: 0,
-    currentLevel: 1,
-    currentQuestion: 0,
-    score: 0
-  };
-}
+function normalizeText(t) { return t.trim().replace(/\s+/g, " "); }
+function normalizeEmail(e) { return e.trim().toLowerCase(); }
+function getUsersData() { return JSON.parse(localStorage.getItem("quizily_users") || "{}"); }
+function saveUsersData(d) { localStorage.setItem("quizily_users", JSON.stringify(d)); }
+function defaultSubjectData() { return { completedLevels: 0, unlockedLevel: 1, stars: 0, bestScore: 0 }; }
 
 function defaultUser(displayName, email) {
   return {
@@ -476,33 +449,36 @@ function defaultUser(displayName, email) {
 
 function ensureUser(email, displayName) {
   const users = getUsersData();
-  if (!users[email]) {
-    users[email] = defaultUser(displayName, email);
-  } else {
-    users[email].displayName = users[email].displayName || displayName;
-    users[email].email = email;
-    users[email].subjects = users[email].subjects || {};
-    ["biology", "chemistry", "physics", "maths"].forEach(s => {
-      users[email].subjects[s] = users[email].subjects[s] || defaultSubjectData();
-      users[email].subjects[s].unlockedLevel = users[email].subjects[s].unlockedLevel || 1;
-    });
-  }
+  if (!users[email]) users[email] = defaultUser(displayName, email);
   saveUsersData(users);
   return users[email];
+}
+
+function loadDashboardProgress() {
+  const users = getUsersData();
+  const u = users[currentEmail];
+  if (!u) return;
+  const s = u.subjects;
+  bioProgressEl.textContent = `${s.biology.completedLevels}/10`;
+  chemProgressEl.textContent = `${s.chemistry.completedLevels}/10`;
+  phyProgressEl.textContent = `${s.physics.completedLevels}/10`;
+  mathProgressEl.textContent = `${s.maths.completedLevels}/10`;
+  bioBar.style.width = `${s.biology.completedLevels * 10}%`;
+  chemBar.style.width = `${s.chemistry.completedLevels * 10}%`;
+  phyBar.style.width = `${s.physics.completedLevels * 10}%`;
+  mathBar.style.width = `${s.maths.completedLevels * 10}%`;
+  userProgressEl.textContent = `${s.biology.completedLevels + s.chemistry.completedLevels + s.physics.completedLevels + s.maths.completedLevels} levels completed total`;
 }
 
 function login() {
   const name = normalizeText(usernameInput.value);
   const email = normalizeEmail(emailInput.value);
-
   if (!name || !email) {
     loginMsg.textContent = "Please enter both name and email.";
     return;
   }
-
   currentUser = name;
   currentEmail = email;
-
   ensureUser(currentEmail, currentUser);
   userNameEl.textContent = currentUser;
   userEmailEl.textContent = currentEmail;
@@ -511,34 +487,23 @@ function login() {
   showSection(dashboardBox);
 }
 
-function loadDashboardProgress() {
-  const users = getUsersData();
-  const user = users[currentEmail];
-  if (!user) return;
-
-  const bio = user.subjects.biology.completedLevels;
-  const chem = user.subjects.chemistry.completedLevels;
-  const phy = user.subjects.physics.completedLevels;
-  const math = user.subjects.maths.completedLevels;
-
-  bioProgressEl.textContent = `${bio}/10`;
-  chemProgressEl.textContent = `${chem}/10`;
-  phyProgressEl.textContent = `${phy}/10`;
-  mathProgressEl.textContent = `${math}/10`;
-
-  bioBar.style.width = `${bio * 10}%`;
-  chemBar.style.width = `${chem * 10}%`;
-  phyBar.style.width = `${phy * 10}%`;
-  mathBar.style.width = `${math * 10}%`;
-
-  userProgressEl.textContent = `${bio + chem + phy + math} levels completed total`;
-}
-
 function openLevels(subject) {
   currentSubject = subject;
-  const title = subject.charAt(0).toUpperCase() + subject.slice(1);
-  levelsTitle.textContent = `${title} Levels`;
+  levelsTitle.textContent = `${subject.charAt(0).toUpperCase() + subject.slice(1)} Levels`;
   levelsSubtitle.textContent = "Choose a level to begin.";
+
+  const themeText = {
+    biology: { name: "Biology", icon: "🌿", className: "biology" },
+    chemistry: { name: "Chemistry", icon: "⚗️", className: "chemistry" },
+    maths: { name: "Maths", icon: "🔢", className: "maths" },
+    physics: { name: "Physics", icon: "⚡", className: "physics" }
+  };
+
+  themeBanner.className = `theme-banner ${themeText[subject].className}`;
+  themeIcon.textContent = themeText[subject].icon;
+  themeName.textContent = themeText[subject].name;
+  themeBanner.classList.remove("hidden");
+
   renderLevelGrid();
   showSection(levelsBox);
 }
@@ -546,87 +511,41 @@ function openLevels(subject) {
 function renderLevelGrid() {
   const users = getUsersData();
   const user = users[currentEmail];
-  const subjectData = user.subjects[currentSubject];
-  const unlocked = subjectData.unlockedLevel || 1;
-  const completed = subjectData.completedLevels || 0;
-
+  const data = user.subjects[currentSubject];
+  const unlocked = data.unlockedLevel || 1;
+  const completed = data.completedLevels || 0;
   levelGrid.innerHTML = "";
-
   for (let i = 1; i <= totalLevels; i++) {
     const btn = document.createElement("button");
     btn.className = "level-card";
-
     if (i <= completed) btn.classList.add("completed");
     if (i > unlocked) btn.classList.add("locked");
-
-    const locked = i > unlocked;
-    btn.innerHTML = `
-      <div class="lock-icon">${i <= completed ? "✅" : locked ? "🔒" : "🎯"}</div>
-      <div class="level-number">Level ${i}</div>
-      <div class="level-status">${i <= completed ? "Completed" : locked ? "Locked" : "Available"}</div>
-    `;
-
-    if (!locked) {
-      btn.addEventListener("click", () => startLevel(i));
-    }
-
+    btn.innerHTML = `<div class="lock-icon">${i <= completed ? "✅" : (i > unlocked ? "🔒" : "🎯")}</div><div class="level-number">Level ${i}</div><div class="level-status">${i <= completed ? "Completed" : (i > unlocked ? "Locked" : "Available")}</div>`;
+    if (i <= unlocked) btn.addEventListener("click", () => startLevel(i));
     levelGrid.appendChild(btn);
   }
 }
 
 function startLevel(levelNumber) {
   currentLevel = levelNumber;
-
-  const allQuestions =
-    currentSubject === "biology" ? biologyQuestions :
-    currentSubject === "chemistry" ? chemistryQuestions :
-    currentSubject === "physics" ? physicsQuestions :
-    mathsQuestions;
-
-  const startIndex = (levelNumber - 1) * questionsPerLevel;
-  selectedQuestions = allQuestions.slice(startIndex, startIndex + questionsPerLevel);
-
+  const allQuestions = currentSubject === "biology" ? biologyQuestions : currentSubject === "chemistry" ? chemistryQuestions : currentSubject === "physics" ? physicsQuestions : mathsQuestions;
+  const start = (levelNumber - 1) * questionsPerLevel;
+  selectedQuestions = allQuestions.slice(start, start + questionsPerLevel);
   currentQuestion = 0;
   score = 0;
-
-  updateStars();
   showSection(quizBox);
   loadQuestion();
 }
 
-function updateSubjectProgress(subject, completedLevels, stars, bestScore, unlockedLevel) {
-  const users = getUsersData();
-  if (!users[currentEmail]) return;
-
-  const subjectData = users[currentEmail].subjects[subject];
-  subjectData.completedLevels = Math.max(subjectData.completedLevels, completedLevels);
-  subjectData.stars = Math.max(subjectData.stars, stars);
-  subjectData.bestScore = Math.max(subjectData.bestScore, bestScore);
-  subjectData.unlockedLevel = Math.max(subjectData.unlockedLevel || 1, unlockedLevel);
-
-  saveUsersData(users);
-  loadDashboardProgress();
-}
-
-function updateStars() {
-  starsEl.textContent = "⭐".repeat(Math.max(1, currentLevel)) + "☆".repeat(totalLevels - Math.max(1, currentLevel));
-}
-
-function getTimeForLevel() {
-  return Math.max(65 - currentLevel * 5, 20);
-}
+function getTimeForLevel() { return Math.max(65 - currentLevel * 5, 20); }
 
 function startTimer() {
   clearInterval(timer);
   timeLeft = getTimeForLevel();
   timerEl.textContent = `Time: ${timeLeft}s`;
-  timerEl.classList.remove("danger");
-
   timer = setInterval(() => {
     timeLeft--;
     timerEl.textContent = `Time: ${timeLeft}s`;
-    timerEl.classList.toggle("danger", timeLeft <= 10);
-
     if (timeLeft <= 0) {
       clearInterval(timer);
       nextQuestion();
@@ -634,108 +553,79 @@ function startTimer() {
   }, 1000);
 }
 
-function stopTimer() {
-  clearInterval(timer);
-}
+function stopTimer() { clearInterval(timer); }
 
 function loadQuestion() {
   const q = selectedQuestions[currentQuestion];
-  const qNo = currentQuestion + 1;
-
-  counterEl.textContent = `Level ${currentLevel}/${totalLevels} - Q${qNo}/${questionsPerLevel}`;
-  progressBar.style.width = `${(qNo / questionsPerLevel) * 100}%`;
+  counterEl.textContent = `Level ${currentLevel}/${totalLevels} - Q${currentQuestion + 1}/${questionsPerLevel}`;
+  progressBar.style.width = `${((currentQuestion + 1) / questionsPerLevel) * 100}%`;
   questionEl.textContent = q.q;
-
   optionEls.forEach((btn, i) => {
     btn.textContent = q.o[i];
-    btn.classList.remove("correct", "wrong", "pop");
+    btn.classList.remove("correct", "wrong");
     btn.disabled = false;
   });
-
   nextBtn.style.display = "none";
   startTimer();
 }
 
-optionEls.forEach(btn => {
-  btn.addEventListener("click", () => {
-    btn.classList.add("pop");
-    setTimeout(() => btn.classList.remove("pop"), 180);
-
-    stopTimer();
-    const correct = selectedQuestions[currentQuestion].a;
-
-    optionEls.forEach(b => b.disabled = true);
-
-    if (btn.textContent === correct) {
-      btn.classList.add("correct");
-      score++;
-    } else {
-      btn.classList.add("wrong");
-      optionEls.forEach(b => {
-        if (b.textContent === correct) b.classList.add("correct");
-      });
-    }
-
-    nextBtn.style.display = "inline-block";
-  });
-});
+optionEls.forEach(btn => btn.addEventListener("click", () => {
+  stopTimer();
+  const correct = selectedQuestions[currentQuestion].a;
+  optionEls.forEach(b => b.disabled = true);
+  if (btn.textContent === correct) {
+    btn.classList.add("correct");
+    score++;
+  } else {
+    btn.classList.add("wrong");
+    optionEls.forEach(b => { if (b.textContent === correct) b.classList.add("correct"); });
+  }
+  nextBtn.style.display = "inline-block";
+}));
 
 function nextQuestion() {
   currentQuestion++;
-
-  if (currentQuestion < selectedQuestions.length) {
-    loadQuestion();
-  } else {
-    finishLevel();
-  }
+  if (currentQuestion < selectedQuestions.length) loadQuestion();
+  else finishLevel();
 }
 
 function finishLevel() {
   stopTimer();
-
   const users = getUsersData();
   const user = users[currentEmail];
-  const subjectData = user.subjects[currentSubject];
-
-  const completedLevels = Math.max(subjectData.completedLevels, currentLevel);
-  const unlockedLevel = Math.max(subjectData.unlockedLevel || 1, currentLevel + 1);
-
-  updateSubjectProgress(currentSubject, completedLevels, currentLevel, score, unlockedLevel);
-
+  const data = user.subjects[currentSubject];
+  data.completedLevels = Math.max(data.completedLevels, currentLevel);
+  data.unlockedLevel = Math.max(data.unlockedLevel, currentLevel + 1);
+  data.bestScore = Math.max(data.bestScore, score);
+  saveUsersData(users);
+  loadDashboardProgress();
   earnedStarsEl.textContent = currentLevel;
   scoreEl.textContent = `${score}/${selectedQuestions.length}`;
   welcomeEl.textContent = `Great job, ${currentUser}!`;
+  starsEl.textContent = "⭐".repeat(currentLevel);
   showSection(resultBox);
 }
 
 function restartQuiz() {
-  stopTimer();
   renderLevelGrid();
   showSection(levelsBox);
 }
 
 function logout() {
-  stopTimer();
   currentUser = "";
   currentEmail = "";
   usernameInput.value = "";
   emailInput.value = "";
+  themeBanner.classList.add("hidden");
   showSection(loginBox);
 }
 
 startBtn.addEventListener("click", login);
-usernameInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") login();
-});
-emailInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") login();
-});
-
-subjectCards.forEach(card => {
-  card.addEventListener("click", () => openLevels(card.dataset.subject));
-});
-
+usernameInput.addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+emailInput.addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+subjectCards.forEach(card => card.addEventListener("click", () => openLevels(card.dataset.subject)));
 logoutBtn.addEventListener("click", logout);
+goDashboardBtn.addEventListener("click", () => showSection(dashboardBox));
 backDashboardBtn.addEventListener("click", () => showSection(dashboardBox));
 backBtn.addEventListener("click", () => {
   stopTimer();
@@ -743,11 +633,6 @@ backBtn.addEventListener("click", () => {
   showSection(levelsBox);
 });
 nextBtn.addEventListener("click", nextQuestion);
-goDashboardBtn.addEventListener("click", () => {
-  showSection(dashboardBox);
-  loadDashboardProgress();
-});
+document.getElementById("restart-btn")?.addEventListener("click", restartQuiz);
 
-document.addEventListener("DOMContentLoaded", () => {
-  showSection(loginBox);
-});
+document.addEventListener("DOMContentLoaded", () => showSection(loginBox));
